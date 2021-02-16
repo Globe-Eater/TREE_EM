@@ -4,8 +4,8 @@ from flask_sqlalchemy import get_debug_queries
 from . import main
 # from .forms import 
 from .. import db
-from ..models import Permission, Role, User, Images
+from ..models import Permission, Role, User, Image
 
-@main.route('/', methods['GET', 'POST'])
+@main.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html') 
