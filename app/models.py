@@ -12,7 +12,7 @@ class Permission:
     ADMIN = 4
     
 class Role(db.Model):
-    __tablename__ = 'roles'
+    __tablename__ = 'role'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     default = db.Column(db.Boolean, default=False, index=True)
@@ -76,13 +76,13 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
-    username = db.Column(db.String(64), unique=true, index=True)
+    username = db.Column(db.String(64), unique=True, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_has = db.Column(db.String(128))
-    confirmed = db.Column(db.Bollean, default=False)
+    confirmed = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(64))
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
-    last_seen = db.Column(db.DateTime(), default=dateime.utcnow)
+    last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     image_id = db.relationship('images', backref='user', lazy='dynamic')
 
     def __init__(self, **kwargs):
@@ -196,7 +196,7 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
-class images(db.Model):
+class Image(db.Model):
     __tablename__ = 'images'
     image_id = db.Column(db.Integer, primary_key=True)
     image = db.Column(db.LargeBinary)
