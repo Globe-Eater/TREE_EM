@@ -1,4 +1,4 @@
-{% extends "boostrap/base.html" %}
+{% extends "bootstrap/base.html" %}
 
 {% block title %}TreeEM{% endblock %}
 
@@ -30,9 +30,9 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for(#'auth.acc_logout') }}">Log Out</a></li>
+                <li><a href="{{ url_for('auth.acc_logout') }}">Log Out</a></li>
                 {% else %}
-                <li><a href="{{ url_for(#'auth.acc_login') }}">Log In</a></li>
+                <li><a href="{{ url_for('auth.user_login') }}">Log In</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -41,3 +41,19 @@
 {% endblock %}
 
 {% block content %}
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}
+
