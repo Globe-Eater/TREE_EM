@@ -8,6 +8,13 @@ verify_ssl = true
 [packages]
 flask = "*"
 py-postgresql = "*"
+flask-bootstrap = "*"
+flask-login = "*"
+flask-moment = "*"
+flask-sqlalchemy = "*"
+flask-wtf = "*"
+email-validator = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.6"
