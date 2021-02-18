@@ -12,7 +12,7 @@ class Permission:
     ADMIN = 4
     
 class Role(db.Model):
-    __tablename__ = 'role'
+    __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     default = db.Column(db.Boolean, default=False, index=True)
@@ -78,12 +78,12 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    password_has = db.Column(db.String(128))
+    password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(64))
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
-    image_id = db.relationship('images', backref='user', lazy='dynamic')
+    image_id = db.relationship('Image', backref='user', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -91,7 +91,7 @@ class User(UserMixin, db.Model):
             if self.email == current_app.config['ADMIN']:
                 self.role = Role.query.filter_by(name='Administrator').first()
             if self.role is None:
-                self.role =  Role.query.filter_by(defualt=True).first()
+                self.role =  Role.query.filter_by(default=True).first()
 
     @property
     def password(self):
@@ -101,7 +101,7 @@ class User(UserMixin, db.Model):
     def password(self, password):
         self.password_hash =  generate_password_hash(password)
 
-    def verifty_password(self, password):
+    def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
     def generate_confirmation_token(self, expiration=3600):
@@ -172,10 +172,8 @@ class User(UserMixin, db.Model):
             'username': self.username,
             'member_since': self.member_since,
             'last_seen': self.last_seen,
-            'posts_url': url_for('api.get_user_posts', id=self.id),
-            'followed_posts_url': url_for('api.get_user_followed_posts',
-                                          id=self.id),
-            'post_count': self.posts.count()
+            'image_url': url_for('api.get_user_images', id=self.id),
+            'image_count': self.image_id.count()
         }
         return json_user
 
@@ -200,5 +198,5 @@ class Image(db.Model):
     __tablename__ = 'images'
     image_id = db.Column(db.Integer, primary_key=True)
     image = db.Column(db.LargeBinary)
-
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
